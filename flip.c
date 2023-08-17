@@ -3,6 +3,7 @@
 #include "fdserial.h"
 
 // ------ Global Variables and Objects ------
+int status;
 int ScanBtn;
 int Lastscan;
 fdserial *fdser0_15;
@@ -16,11 +17,16 @@ int main()
   fdser0_15 = fdserial_open(0, 15, 0b0000, 9600);
   simpleterm_close();
 
+  status = 1;
+  while (!(status == 0)) {
+    status = (get_states(14, 14));
+    pause(500);
+  }
   ScanBtn = 0;
   Lastscan = 0;
-  pause(1000);
+  pause(500);
   simpleterm_open();
-  pause(3000);
+  pause(500);
   if (ScanBtn == 0) {
   }
   else {
@@ -55,7 +61,7 @@ int main()
 
 // ------ Functions ------
 void CheckAllPins() {
-  set_directions(12, 0, 0b0000000000000);
+  set_outputs(12, 0, 0b0000000000000);
   pause(500);
   if (input(0)) {
     ScanBtn = (ScanBtn + 4096);
