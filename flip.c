@@ -6,7 +6,7 @@
 int status;
 int ScanBtn;
 int Lastscan;
-fdserial *fdser0_15;
+fdserial *fdser14_15;
 
 // ------ Function Declarations ------
 void CheckAllPins();
@@ -14,9 +14,7 @@ void CheckAllPins();
 // ------ Main Program ------
 int main()
 {
-  fdser0_15 = fdserial_open(0, 15, 0b0000, 9600);
-  simpleterm_close();
-
+  fdser14_15 = fdserial_open(14, 15, 0b0000, 9600);
   status = 1;
   while (!(status == 0)) {
     status = (get_states(14, 14));
@@ -24,14 +22,17 @@ int main()
   }
   ScanBtn = 0;
   Lastscan = 0;
-  pause(500);
-  simpleterm_open();
-  pause(500);
+  CheckAllPins();
   if (ScanBtn == 0) {
   }
   else {
-    print("ROW1A");
-    print("%b\r", ScanBtn);
+    dprint(fdser14_15, "%s\r", ("ROW1A"));
+    while(!fdserial_txEmpty(fdser14_15));
+    pause(5);
+    dprint(fdser14_15, "%b\r", ScanBtn);
+    dprint(fdser14_15, "%s\r", ("\n"));
+    while(!fdserial_txEmpty(fdser14_15));
+    pause(5);
   }
 
   while(1) {
@@ -42,12 +43,18 @@ int main()
     else {
       if (ScanBtn == 0) {
         pause(200);
-        print("REMOVE1A");
-        print("\r");
+        dprint(fdser14_15, "%s\r", ("REMOVE1A\n"));
+        while(!fdserial_txEmpty(fdser14_15));
+        pause(5);
       }
       else {
-        print("ROW1A");
-        print("%b\r", ScanBtn);
+        dprint(fdser14_15, "%s\r", ("ROW1A"));
+        while(!fdserial_txEmpty(fdser14_15));
+        pause(5);
+        dprint(fdser14_15, "%b\r", ScanBtn);
+        dprint(fdser14_15, "%s\r", ("\n"));
+        while(!fdserial_txEmpty(fdser14_15));
+        pause(5);
       }
 
       Lastscan = ScanBtn;
@@ -55,7 +62,6 @@ int main()
     }
 
   }
-  return 0;
 
 }
 
