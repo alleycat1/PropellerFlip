@@ -1,11 +1,11 @@
 // ------ Libraries and Definitions ------
 #include "simpletools.h"
-#define MY_T9600 	84
-#define MY_BAUD 	84
+#include "fdserial.h"
 
 // ------ Global Variables and Objects ------
 int ScanBtn;
 int Lastscan;
+fdserial *fdser0_15;
 
 // ------ Function Declarations ------
 void CheckAllPins();
@@ -13,6 +13,7 @@ void CheckAllPins();
 // ------ Main Program ------
 int main()
 {
+  fdser0_15 = fdserial_open(0, 15, 0b0000, 9600);
   simpleterm_close();
 
   ScanBtn = 0;
